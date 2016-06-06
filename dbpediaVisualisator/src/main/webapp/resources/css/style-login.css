@@ -1,0 +1,82 @@
+
+.tekst {
+    -webkit-text-stroke: 0.3px black;
+
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  padding: 10px;
+}
+#element_to_pop_up {
+	background-color: #fff;
+	border-radius: 15px;
+	color: #000;
+	display: none;
+	padding: 20px;
+	min-width: 400px;
+	min-height: 180px;
+	font-size: 25px;
+ text-align: center;
+vertical-align: middle;
+line-height: 180px;
+}
+
+.b-close {
+	cursor: pointer;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+}
+
+
+.imageBox
+{
+    position: relative;
+    height: 390px;
+    width: 390px;
+    border:1px solid #aaa;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor:move;
+}
+
+
+
+.imageBox .thumbBox
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -150px;
+    box-sizing: border-box;
+    border: 1px solid rgb(102, 102, 102);
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+    background: none repeat scroll 0% 0% transparent;
+}
+
+.imageBox .spinner
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    line-height: 400px;
+    background: rgba(0,0,0,0.7);
+}
+.cropped{
+
+    width: 50%;
+    margin: 0 auto;
+}
