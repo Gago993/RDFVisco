@@ -17,4 +17,12 @@ public class HomeController {
 		ModelAndView m = new ModelAndView("first");
 		return m;
 	}
+	
+	@RequestMapping(value = "/main", method = RequestMethod.GET)
+	public ModelAndView getMain() {
+		ModelAndView m = new ModelAndView("index");
+		return m;
+	}
+	
+	
 }
