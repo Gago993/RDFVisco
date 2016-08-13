@@ -1,0 +1,43 @@
+{
+	"name": "http://dbpedia.org/resource/Barack_Obama",
+	"children": [{
+		"name": "http://dbpedia.org/property/nationality",
+		"children": [{
+			"name": "American",
+			"size": 4000
+		}]
+	}, {
+		"name": "http://dbpedia.org/property/religion",
+		"children": [{
+			"name": "Protestantism",
+			"size": 3500
+		}]
+	}, {
+		"name": "http://dbpedia.org/ontology/soundRecording",
+		"children": [{
+			"name": "http://dbpedia.org/resource/Barack_Obama__5",
+			"size": 3300
+		}, {
+			"name": "http://dbpedia.org/resource/Barack_Obama__4",
+			"size": 3300
+		}]
+	}, {
+		"name": "http://dbpedia.org/property/education",
+		"children": [{
+			"name": "http://dbpedia.org/page/Punahou_School",
+			"size": 8500
+		}]
+	}, {
+		"name": "http://dbpedia.org/property/birthName",
+		"children": [{
+			"name": "Barack Hussein Obama II",
+			"size": 7000
+		}]
+	}, {
+		"name": "http://dbpedia.org/ontology/wikiPageID",
+		"children": [{
+			"name": "534366",
+			"size": 2000
+		}]
+	}]
+}

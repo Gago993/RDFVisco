@@ -1,0 +1,32 @@
+{ 
+  "name": "http://dbpedia.org/resource/Punahou_School",
+  "children": [
+		{
+			"name": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
+			"children": [
+				{"name" : "http://en.wikipedia.org/wiki/Punahou_School", "size": 4000}
+			]
+		},
+		{
+			"name": "http://dbpedia.org/property/teamName",
+			"children": [
+				{"name" : "Buffanblu", "size": 3500}
+			]
+		},
+		{
+			"name": "http://dbpedia.org/ontology/thumbnail",
+			"children": [
+				{"name" : "http://commons.wikimedia.org/wiki/Special:FilePath/Old_School_Hall_at_Punahou_School.jpg?width=300", "size": 3300}
+			]
+		},
+		{
+			"name": "http://dbpedia.org/ontology/wikiPageExternalLink",
+			"children": [
+				{"name" : "http://findarticles.com/p/articles/mi_go2021/is_200309/ai_n9142055", "size": 4500},
+				{"name" : "http://www.100thbattalion.org/history/veterans/officers/farrant-turner/", "size": 5000},
+				{"name" : "http://www.holycross.edu/departments/crec/website/elizabeth_johns.htm", "size": 4000},
+				{"name" : "http://www.punahou.edu/page.cfm?p=1890", "size": 3200}
+			]
+		}
+    ] 
+}
