@@ -64,26 +64,28 @@ var myjson = {
 var myLocalData;
 
 var width = 960, height = 500, root;
-var force = d3.layout.force().size([ width, height ]).on("tick", tick).linkDistance(function(d) { 
-    return 50; 
-});
+var force = d3.layout.force().size([ width, height ]).on("tick", tick).charge(-120)
+.linkDistance(30);
+
 var svg = d3.select("body").append("svg").attr("width", width).attr("height",
 		height);
 var link = svg.selectAll(".link"), node = svg.selectAll(".node");
-/*d3.json("dbpediaVisualisator/resources/data/barackObama-data.json", function(error, json) {
+d3.json("dbpediaVisualisator/resources/data/barackObama-data.json", function(error, json) {
 	
-	console.log(json,"json");
+	//console.log(json,"json");
 	if (error)
 		throw error;
 	root = json;
+	myLocalData = { name: root.name, children: []};
 	update();
 });
-*/
-root = myjson;
 
-myLocalData = { name: root.name, children: []};
+/*root = myjson;
 
-update();
+
+root = d3.hierarchy(root);
+
+update();*/
 
 /*var drag = force.drag()
 .on("dragstart", dragstart);*/
@@ -91,27 +93,12 @@ update();
 
 
 function update() {
-	console.log(link, node);
 	link.remove();
 	node.remove();
 	link = svg.selectAll(".link"); node = svg.selectAll(".node");
-	console.log(link, node);
+	var test = d3.hierarchy(root);
+	var nodes = flatten(test), links = test.links(nodes);
 	
-	var nodes = flatten(root), links = d3.layout.tree().links(nodes);
-	
-	nodes.sort(function(a,b){
-		if (a.level < b.level) {
-		    return -1;
-		  }
-		  if (a.level > b.level) {
-		    return 1;
-		  }
-		  // a must be equal to b
-		  return 0;	
-	
-	});
-	
-	console.log(nodes);
 	// Restart the force layout.
 	force.nodes(nodes).links(links).start();
 	// Update the links…
@@ -138,22 +125,25 @@ function update() {
 	// Exit any old nodes.
 	node.exit().remove();
 	// Enter any new nodes.
-	node.enter().append("circle").attr("id",function(d){
-		return d.name;
-	}).attr("class", "node").attr("class", "circle").attr("cx", function(d) {
+	node.enter().append("circle")
+	.attr("class", "node").attr("class", "circle").attr("cx", function(d) {
 		return d.x;
 	}).attr("cy", function(d) {
 		return d.y;
 	}).attr("r", function(d) {
 		return Math.sqrt(d.size) / 5 || 8.5;
 	}).style("fill", color).on("click", click).call(force.drag).append("svg:title")
-	   .text(function(d) { return d.name; });
+	   .text(function(d) { return d.data.name; });
 	
 	   
 }
 
-function tick() {
-	link.attr("x1", function(d) {
+function tick(e) {
+	var k = 6 * e.alpha;
+	
+	link
+	.each(function(d) { d.source.y -= k, d.target.y += k;})
+	.attr("x1", function(d) {
 		return d.source.x;
 	}).attr("y1", function(d) {
 		return d.source.y;
@@ -176,7 +166,7 @@ function color(d) {
 }
 // Toggle children on click.
 function click(d) {
-	console.log(this,"click");
+	
 	if (!d3.event.defaultPrevented) {
 		if (d.children) {
 			d._children = d.children;
@@ -185,11 +175,7 @@ function click(d) {
 			d.children = d._children;
 			d._children = null;
 		}else{
-			console.log(d.parent,"get Democratic party json");
-			var myNode = d3.select("circle#"+escapeRegExp(d.parent));
-			console.log(myNode[0][0].id,"parent node");
-			
-			myLocalData.children[0] = {"name": myNode[0][0].id, children: [{ name: d.name, children: []}]};
+			myLocalData.children[0] = {"name": d.parent.data.name, children: [{ name: d.data.name, children: []}]};
 			
 
 			d3.json("dbpediaVisualisator/resources/data/punahou-data.json",function(error,json){
@@ -197,11 +183,11 @@ function click(d) {
 				
 				myjson = JSON.parse(JSON.stringify(myLocalData));
 				myjson.children[0].children[0] = json;
-				console.log(myLocalData,"localData");
+				console.log(myjson,"localData");
 				
 				root = myjson;
 				
-				console.log(root,"new data");
+			//	console.log(root,"new data");
 				update();
 			})
 			
@@ -211,19 +197,16 @@ function click(d) {
 // Returns a list of all nodes under the root.
 function flatten(root) {
 	var nodes = [], i = 0;
-	function recurse(node, index) {
-		node.level = index;
+	function recurse(node) {
 		
 		if (node.children){
-			node.children.forEach(function(val, key){
-				recurse(val, ++index);
-			});
+			node.children.forEach(recurse);
 		}
 		if (!node.id)
 			node.id = ++i;
 		nodes.push(node);
 	}
-	recurse(root, 0);
+	recurse(root);
 	return nodes;
 }
 

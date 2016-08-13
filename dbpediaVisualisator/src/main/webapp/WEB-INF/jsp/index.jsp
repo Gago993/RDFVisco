@@ -6,6 +6,7 @@
 	<link href="dbpediaVisualisator/resources/css/main.css" rel="stylesheet">
 	<script src="dbpediaVisualisator/resources/js/jquery-1.11.3.min.js" charset="utf-8"></script>
 	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
 <style>
 .node {
   cursor: pointer;
@@ -28,7 +29,7 @@
 
 
 <body>
-
-	<script src="dbpediaVisualisator/resources/js/rdfVisco/main.js"></script>
+<div id="chart"></div>
+	<script src="dbpediaVisualisator/resources/js/rdfVisco/main2.js"></script>
 </body>
 </html>
