@@ -3,8 +3,8 @@
 <head>
 	<title>RDFVisco</title>
 	
-	<link href="dbpediaVisualisator/resources/css/main.css" rel="stylesheet">
-	<script src="dbpediaVisualisator/resources/js/jquery-1.11.3.min.js" charset="utf-8"></script>
+	<link href="resources/css/main.css" rel="stylesheet">
+	<script src="resources/js/jquery-1.11.3.min.js" charset="utf-8"></script>
 	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
 <style>
@@ -30,6 +30,6 @@
 
 <body>
 <div id="chart"></div>
-	<script src="dbpediaVisualisator/resources/js/rdfVisco/main2.js"></script>
+	<script src="resources/js/rdfVisco/main2.js"></script>
 </body>
 </html>

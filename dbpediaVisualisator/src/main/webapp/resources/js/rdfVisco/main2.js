@@ -30,7 +30,7 @@ var vis = d3.select("#chart").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("dbpediaVisualisator/resources/data/barackObama-data.json", function(json) {
+d3.json("resources/data/barackObama-data.json", function(json) {
   root = json;
   root.fixed = true;
   root.px = root.py = 0;
