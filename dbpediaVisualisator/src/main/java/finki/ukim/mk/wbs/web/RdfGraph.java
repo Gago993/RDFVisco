@@ -5,6 +5,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
 
 
 public class RdfGraph {
@@ -12,29 +13,22 @@ public class RdfGraph {
 	
 	public RdfGraph(){
 		model = ModelFactory.createDefaultModel();
+		
 	}
 	
-	public Model getModel(String URI){
+	public static Model getModel(String URI){
 		URI = changeURI(URI);
-		
-		String query = "CONSTRUCT {"
-				+ "<" + URI + "> ?p ?o" 
-				+ "}"
-				+ "WHERE {"
-				+ "<" + URI + "> ?p ?o"
-				+ "}"
-				+ "LIMIT 10000";
-		
-		Query sparqlQuery = QueryFactory.create(query);
-		QueryExecution exec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", sparqlQuery);
-		model = exec.execConstruct();
+		FileManager fm = FileManager.get();
+		String uri = changeURI("http://dbpedia.org/resource/Cristiano_Ronaldo");
+		Model m = fm.loadModel(uri);
 		
 		return model;
 	}
 
 	public String changeURI(String URI) {
 		String [] uriSplit = URI.split("/");
-		return "http://dbpedia.org/resource/" + uriSplit[uriSplit.length-1];
+		int resourceNameIndex = uriSplit.length - 1;
+		return "http://dbpedia.org/data/" + uriSplit[resourceNameIndex] + ".rdf";
 	}
 
 }

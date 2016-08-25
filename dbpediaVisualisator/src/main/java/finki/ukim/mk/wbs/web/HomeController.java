@@ -13,6 +13,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +42,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
 	public String createJson() throws FileNotFoundException {
-
-		Model model = ModelFactory.createDefaultModel();
-		RdfGraph graph = new RdfGraph();
-		Model m = graph.getModel("http://dbpedia.org/page/Cristiano_Ronaldo");
+		Model m = RdfGraph.getModel("http://dbpedia.org/resource/Cristiano_Ronaldo");
 		OutputStream output = new FileOutputStream("C:\\Users\\Grozdan.Madjarov\\Desktop\\rdfJson.txt");
 		m.write(output, "RDF/JSON");
 		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Grozdan.Madjarov\\Desktop\\rdfJson.txt",graph.changeURI("http://dbpedia.org/page/Cristiano_Ronaldo"));
