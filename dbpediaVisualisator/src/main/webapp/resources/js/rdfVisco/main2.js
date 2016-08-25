@@ -1,7 +1,8 @@
-var width = 960,
-    height = 500,
+var width = 1024,
+    height = 768,
     node,
     link,
+    text,
     root;
 
 var myjson = {};
@@ -11,10 +12,10 @@ var myLocalData;
 var force = d3.layout.force()
     .on("tick", tick)
     .charge(function(d) {
-      return d._children ? -d.size / 100 : d.children ? -100 : -30;
+      return d._children ? -d.size / 50 : d.children ? -100 : -30;
     })
     .linkDistance(function(d) {
-      return d.target._children ? 25 : 20;
+      return d.target._children ? 105 : 100;
     })
     .size([width, height]);
 
@@ -43,12 +44,18 @@ function initTree(resourceUri){
 		  update();
 		});
 }
+initTree();
+
 
 function update(nodes) {
 	
-	var nod = vis.selectAll(".link"); var vod = vis.selectAll(".node");
+	var nod = vis.selectAll(".link"); 
+	var vod = vis.selectAll(".node");
+	var txt = vis.selectAll(".txt");
+	
 	nod.remove();
 	vod.remove();
+	txt.remove();
 	
 	
   var nodes = flatten(root);
@@ -92,7 +99,8 @@ function update(nodes) {
       .attr("r", function(d) { return circle_radius(d); });
 
   // Enter any new nodes.
-  node.enter().append("circle")
+  node.enter()
+  	  .append("circle")
       .attr("class", "node")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
@@ -101,8 +109,22 @@ function update(nodes) {
       .on("click", click)
       .call(force.drag)
       .append("svg:title")
-	  .text(function(d) { return d.name; });;
-
+	  .text(function(d) { return d.name; });
+  
+  console.log(nodes,"nodes");
+ 
+  d3.select("svg").append("g").attr("class", "txt");
+  
+  text = d3.select("g").selectAll("text")
+  .data(nodes)
+  .enter().append("text")
+  .attr("class", "txt")
+  .attr("x", function(d){ return d.x})
+  .attr("y", function(d){ return d.y})
+  .text(function(d) { return d.name;})
+  .attr("id", function(d) { return d.label; });
+  
+  
   // Exit any old nodes.
   node.exit().remove();
 }
@@ -112,7 +134,7 @@ function tick(e) {
   //
   force.nodes().forEach(function(d) {
     if (!d.fixed) {
-      var r = circle_radius(d) + 4, dx, dy, ly = 30;
+      var r = circle_radius(d) + 14, dx, dy, ly = 30;
 
       // #1: constraint all nodes to the visible screen:
       //d.x = Math.min(width - r, Math.max(r, d.x));
@@ -153,6 +175,9 @@ function tick(e) {
 
   node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
+  
+  text.attr("x", function(d) { return d.x; })
+  .attr("y", function(d) { return d.y; });
 }
 
 // Color leaf nodes orange, and packages white or blue.
@@ -161,7 +186,7 @@ function color(d) {
 }
 
 function circle_radius(d) {
-  return d.children ? 4.5 : Math.sqrt(d.size) / 10;
+  return d.children ? 15 : 20;//Math.sqrt(d.size) / 5;
 }
 
 // Toggle children on click.
