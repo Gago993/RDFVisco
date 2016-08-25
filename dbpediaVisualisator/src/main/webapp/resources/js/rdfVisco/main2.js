@@ -30,14 +30,19 @@ var vis = d3.select("#chart").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("resources/data/barackObama-data.json", function(json) {
-  root = json;
-  root.fixed = true;
-  root.px = root.py = 0;
-  myLocalData = { name: root.name, children: []};
-  
-  update();
-});
+
+function initTree(resourceUri){
+
+	//TODO:Ajax call to get json for initial resource uri from search.
+
+	d3.json("resources/data/barackObama-data.json", function(json) {
+		  root = json;
+		  root.fixed = true;
+		  root.px = root.py = 0;
+		  myLocalData = { name: root.name, children: []};
+		  update();
+		});
+}
 
 function update(nodes) {
 	
@@ -96,7 +101,7 @@ function update(nodes) {
       .on("click", click)
       .call(force.drag)
       .append("svg:title")
-	   .text(function(d) { return d.name; });;
+	  .text(function(d) { return d.name; });;
 
   // Exit any old nodes.
   node.exit().remove();
@@ -161,7 +166,9 @@ function circle_radius(d) {
 
 // Toggle children on click.
 function click(d) {
-  if (d.children) {
+	if (d3.event.defaultPrevented) return; 
+	
+	if (d.children) {
     d._children = d.children;
     d.children = null;
     update();
@@ -170,17 +177,14 @@ function click(d) {
     d._children = null;
     update();
   }else{
-	  console.log(d, "d data");
 	  myLocalData.children[0] = {"name": d.parent.name, children: [{ name: d.name, children: []}]};
-	  d3.json("dbpediaVisualisator/resources/data/punahou-data.json",function(error,json){
+	  d3.json("resources/data/punahou-data.json",function(error,json){
 			if(error) throw error;
 			
 			myjson = JSON.parse(JSON.stringify(myLocalData));
 			myjson.children[0].children[0] = json;
 			
 			root = myjson;
-			
-			console.log(myjson,"new data");
 			
 			update();
 	  })
