@@ -15,8 +15,11 @@ var force = d3.layout.force()
       return d._children ? -d.size / 50 : d.children ? -100 : -30;
     })
     .linkDistance(function(d) {
-      return d.target._children ? 105 : 100;
+      return d.target.children ? 50  : 30;
     })
+    .charge(function(node) {
+       return -1000;
+       })
     .size([width, height]);
 
 
