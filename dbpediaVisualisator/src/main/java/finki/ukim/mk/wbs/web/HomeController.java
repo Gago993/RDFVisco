@@ -49,7 +49,7 @@ public class HomeController {
 		Model m = graph.getModel("http://dbpedia.org/page/Cristiano_Ronaldo");
 		OutputStream output = new FileOutputStream("C:\\Users\\Alek\\Desktop\\rdfJson.txt");
 		m.write(output, "RDF/JSON");
-		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Alek\\Desktop\\rdfJson.txt",graph.changeURI("http://dbpedia.org/page/Cristiano_Ronaldo"));
+		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Alek\\Desktop\\rdfJson.txt", "http://dbpedia.org/resource/Cristiano_Ronaldo");
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return "first";
 	}
