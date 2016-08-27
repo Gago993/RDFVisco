@@ -9,23 +9,16 @@ import org.apache.jena.util.FileManager;
 
 
 public class RdfGraph {
-	private Model model;
-	
-	public RdfGraph(){
-		model = ModelFactory.createDefaultModel();
-		
-	}
 	
 	public static Model getModel(String URI){
 		URI = changeURI(URI);
 		FileManager fm = FileManager.get();
 		String uri = changeURI("http://dbpedia.org/resource/Cristiano_Ronaldo");
 		Model m = fm.loadModel(uri);
-		
-		return model;
+		return m;
 	}
 
-	public String changeURI(String URI) {
+	public static String changeURI(String URI) {
 		String [] uriSplit = URI.split("/");
 		int resourceNameIndex = uriSplit.length - 1;
 		return "http://dbpedia.org/data/" + uriSplit[resourceNameIndex] + ".rdf";

@@ -1,3 +1,4 @@
+
 package finki.ukim.mk.wbs.service;
 
 import java.io.FileInputStream;
@@ -34,7 +35,7 @@ public class JsonModifier {
 	}
 
 	public String modifyAndGetLocationOfModifiedJson() throws FileNotFoundException {
-		InputStream inputRdfJsonStream = new FileInputStream("C:\\Users\\Grozdan.Madjarov\\Desktop\\rdfJson.txt");
+		InputStream inputRdfJsonStream = new FileInputStream("C:\\Users\\Alek\\Desktop\\rdfJson.txt");
 		JSONParser parser = new JSONParser();
 		try {
 
@@ -49,8 +50,6 @@ public class JsonModifier {
 					Iterator<?> it = keys.iterator();
 					while (it.hasNext()) {
 						String key = (String) it.next();
-						String [] getLabel = key.split("/");
-						String label = getLabel[getLabel.length-1];
 						System.out.println(key);
 						JSONObject tempObj = new JSONObject();
 						tempObj.put("name", key);
@@ -62,7 +61,6 @@ public class JsonModifier {
 						JSONObject objInTemp = new JSONObject();
 						objInTemp.put("name", oldJobj.get("value"));
 						objInTemp.put("size", "1000");
-						objInTemp.put("label", label);
 						objInTemp.put("parent", key);
 						tempArray.add(objInTemp);
 						tempObj.put("children", tempArray);
@@ -81,7 +79,7 @@ public class JsonModifier {
 			gagoObject.put("children", resultObj);
 			System.out.println(gagoObject.toString());
 
-			FileWriter file = new FileWriter("C:\\Users\\Grozdan.Madjarov\\Desktop\\resultJson.txt");
+			FileWriter file = new FileWriter("C:\\Users\\Alek\\Desktop\\resultJson.txt");
 			file.write(gagoObject.toJSONString());
 			file.flush();
 			file.close();

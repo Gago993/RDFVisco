@@ -13,11 +13,11 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,6 +33,7 @@ public class HomeController {
 		ModelAndView m = new ModelAndView("first");
 		return m;
 	}
+	
 
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public ModelAndView getMain() {
@@ -42,14 +43,18 @@ public class HomeController {
 
 	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
 	public String createJson() throws FileNotFoundException {
-		Model m = RdfGraph.getModel("http://dbpedia.org/resource/Cristiano_Ronaldo");
-		OutputStream output = new FileOutputStream("C:\\Users\\Grozdan.Madjarov\\Desktop\\rdfJson.txt");
+
+		Model model = ModelFactory.createDefaultModel();
+		RdfGraph graph = new RdfGraph();
+		Model m = graph.getModel("http://dbpedia.org/page/Cristiano_Ronaldo");
+		OutputStream output = new FileOutputStream("C:\\Users\\Alek\\Desktop\\rdfJson.txt");
 		m.write(output, "RDF/JSON");
-		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Grozdan.Madjarov\\Desktop\\rdfJson.txt",graph.changeURI("http://dbpedia.org/page/Cristiano_Ronaldo"));
+		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Alek\\Desktop\\rdfJson.txt",graph.changeURI("http://dbpedia.org/page/Cristiano_Ronaldo"));
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return "first";
 	}
 
+	
 	
 
 }
