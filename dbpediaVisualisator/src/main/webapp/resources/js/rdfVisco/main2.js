@@ -67,8 +67,8 @@ function update(nodes) {
   // make sure we set .px/.py as well as node.fixed will use those .px/.py to 'stick' the node to:
   if (!root.px) {
     // root have not be set / dragged / moved: set initial root position
-    root.px = root.x = width / 2;
-    root.py = root.y = circle_radius(root) + 2;
+    root.px = root.x = width / 3;
+    root.py = root.y = circle_radius(root) + 2 ;
   }
 
   // Restart the force layout.
@@ -185,7 +185,7 @@ function tick(e) {
 
 // Color leaf nodes orange, and packages white or blue.
 function color(d) {
-  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+  return d._children ? "#4F9ADB" : d.children ? "#194163" : "#467D33";
 }
 
 function circle_radius(d) {

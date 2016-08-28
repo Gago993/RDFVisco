@@ -63,7 +63,7 @@ var myjson = {
 
 var myLocalData;
 
-var width = 960, height = 500, root;
+var width = 1000, height = 600, root;
 var force = d3.layout.force().size([ width, height ]).on("tick", tick).charge(-120)
 .linkDistance(30);
 
@@ -162,7 +162,7 @@ function tick(e) {
 }
 // Color leaf nodes orange, and packages white or blue.
 function color(d) {
-	return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+	return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#013918";
 }
 // Toggle children on click.
 function click(d) {

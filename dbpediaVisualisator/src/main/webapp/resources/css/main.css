@@ -1,5 +1,7 @@
 @CHARSET "ISO-8859-1";
 
+ @font-face { font-family: titleFont; font-weight: bold; src: url('../fonts/titleFont.otf'); } 
+
 .link {
   fill: none;
   stroke: #666;
@@ -19,7 +21,7 @@
 }
 
 circle {
-  fill: #ccc;
+  fill: #006622;
   stroke: #333;
   stroke-width: 1.5px;
 }
