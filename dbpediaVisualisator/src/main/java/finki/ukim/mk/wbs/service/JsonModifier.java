@@ -18,28 +18,28 @@ import org.springframework.stereotype.Service;
 
 public class JsonModifier {
 
-	private String jsonLocationFile;
+	private String json;
 	private String sparqlParameter;
 
-	public JsonModifier(String jsonLocation, String sparqlParameter) {
-		this.jsonLocationFile = jsonLocation;
+	public JsonModifier(String json, String sparqlParameter) {
+		this.json = json;
 		this.sparqlParameter = sparqlParameter;
 	}
 
-	public String getJsonLocation() {
-		return jsonLocationFile;
+	public String getJson() {
+		return json;
 	}
 
-	public void setJsonLocation(String jsonLocation) {
-		this.jsonLocationFile = jsonLocation;
+	public void setJson(String json) {
+		this.json = json;
 	}
 
 	public String modifyAndGetLocationOfModifiedJson() throws FileNotFoundException {
-		InputStream inputRdfJsonStream = new FileInputStream("C:\\Users\\Alek\\Desktop\\rdfJson.txt");
+		
 		JSONParser parser = new JSONParser();
 		try {
 
-			Object obj = parser.parse(new FileReader(jsonLocationFile));
+			Object obj = parser.parse(json);
 
 			JSONArray resultArray = new JSONArray();
 			JSONObject jsonObject = (JSONObject) obj;
@@ -74,15 +74,8 @@ public class JsonModifier {
 			resultObj.put("name", sparqlParameter);
 			resultObj.put("children", resultArray);
 
-			JSONObject gagoObject = new JSONObject();
-			gagoObject.put("name", "gago");
-			gagoObject.put("children", resultObj);
-			System.out.println(gagoObject.toString());
 
-			FileWriter file = new FileWriter("C:\\Users\\Alek\\Desktop\\resultJson.txt");
-			file.write(gagoObject.toJSONString());
-			file.flush();
-			file.close();
+			return resultObj.toJSONString();
 
 		} catch (Exception e) {
 			e.printStackTrace();

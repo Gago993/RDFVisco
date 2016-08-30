@@ -1,24 +1,33 @@
-var width = 1024,
-    height = 768,
+var w = '100%',
+    h = '100%',
+    width,
+    height,
     node,
     link,
     text,
     root;
 
 var myjson = {};
-var myLocalData;
+var myLocalData,localDataPointer;
+var url  = "dbpediaVisualisator/createJson";
 
+var vis = d3.select("#chart").append("svg")
+.attr("width", w)
+.attr("height", h);
+
+width = $("svg").width();
+height = $("svg").height();
 
 var force = d3.layout.force()
     .on("tick", tick)
-    .charge(function(d) {
+    /*.charge(function(d) {
       return d._children ? -d.size / 50 : d.children ? -100 : -30;
-    })
+    })*/
     .linkDistance(function(d) {
-      return d.target.children ? 50  : 30;
+      return d.target.children ? 150  : 130;
     })
     .charge(function(node) {
-       return -1000;
+       return -500;
        })
     .size([width, height]);
 
@@ -30,22 +39,32 @@ function dragstart(d) {
 	  d3.select(this).classed("fixed", d.fixed = true);
 }
 
-var vis = d3.select("#chart").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+
 
 
 function initTree(resourceUri){
 
 	//TODO:Ajax call to get json for initial resource uri from search.
-
-	d3.json("resources/data/barackObama-data.json", function(json) {
-		  root = json;
-		  root.fixed = true;
-		  root.px = root.py = 0;
-		  myLocalData = { name: root.name, children: []};
-		  update();
+	
+	$.ajax({
+		  dataType: "json",
+		  url: url,
+		  //data: data,
+		  success: success
 		});
+
+	function success(data){
+		//"resources/data/barackObama-data.json"
+		//d3.json(data, function(json) {
+			  //root = json;
+		root = data;
+		root.fixed = true;
+		root.px = root.py = 0;
+		myLocalData = { name: root.name, children: []};
+		localDataPointer = myLocalData;
+		update();
+	//		});
+	}
 }
 initTree();
 
@@ -114,18 +133,16 @@ function update(nodes) {
       .append("svg:title")
 	  .text(function(d) { return d.name; });
   
-  console.log(nodes,"nodes");
  
   d3.select("svg").append("g").attr("class", "txt");
-  
   text = d3.select("g").selectAll("text")
   .data(nodes)
   .enter().append("text")
   .attr("class", "txt")
   .attr("x", function(d){ return d.x})
   .attr("y", function(d){ return d.y})
-  .text(function(d) { return d.name;})
-  .attr("id", function(d) { return d.label; });
+  .text(function(d) { return d.label;})
+  .attr("id", function(d) { return d.label; })
   
   
   // Exit any old nodes.
@@ -135,16 +152,17 @@ function update(nodes) {
 function tick(e) {
   // Apply the constraints:
   //
+	var i = 20;
   force.nodes().forEach(function(d) {
     if (!d.fixed) {
       var r = circle_radius(d) + 14, dx, dy, ly = 30;
-
       // #1: constraint all nodes to the visible screen:
       //d.x = Math.min(width - r, Math.max(r, d.x));
       //d.y = Math.min(height - r, Math.max(r, d.y));
 
       // #1.0: hierarchy: same level nodes have to remain with a 1 LY band vertically:
       if (d.children || d._children) {
+    	  if(d.parent){ d.fixed = true;}
         var py = 0;
         if (d.parent) {
           py = d.parent.y;
@@ -155,7 +173,18 @@ function tick(e) {
       // #1a: constraint all nodes to the visible screen: links
       dx = Math.min(0, width - r - d.x) + Math.max(0, r - d.x);
       dy = Math.min(0, height - r - d.y) + Math.max(0, r - d.y);
-      d.x += 2 * Math.max(-ly, Math.min(ly, dx));
+      
+      if(d.parent && !d.parent.parent){
+    	  var num_c = d.parent.children.length || d.parent._children.length;
+    	  var inc = (width - 2*r)/num_c;
+    	  d.x = i; i+= inc; //2 * Math.max(-ly, Math.min(ly, dx));
+      }else{
+    	  if(d.parent){
+    		  d.x = d.parent.x;
+    	  }
+      }
+      
+      
       d.y += 2 * Math.max(-ly, Math.min(ly, dy));
       // #1b: constraint all nodes to the visible screen: charges ('repulse')
       dx = Math.min(0, width - r - d.px) + Math.max(0, r - d.px);
@@ -167,6 +196,7 @@ function tick(e) {
       if (d.parent) {
         d.y = Math.max(d.y, d.parent.y + ly);
         d.py = Math.max(d.py, d.parent.py + ly);
+        
       }
     }
   });
@@ -205,17 +235,27 @@ function click(d) {
     d._children = null;
     update();
   }else{
-	  myLocalData.children[0] = {"name": d.parent.name, children: [{ name: d.name, children: []}]};
-	  d3.json("resources/data/punahou-data.json",function(error,json){
-			if(error) throw error;
-			
-			myjson = JSON.parse(JSON.stringify(myLocalData));
-			myjson.children[0].children[0] = json;
-			
+	  localDataPointer.children = [{"name": d.parent.name, children: [{ name: d.name, children: []}]}];
+	  localDataPointer = localDataPointer.children[0];
+		$.ajax({
+			  dataType: "json",
+			  url: url,
+			  data: {name: d.name},
+			  success: success
+			});
+	
+		function success(data){
+			//myjson = JSON.parse(JSON.stringify(myLocalData));
+			localDataPointer.children[0] = data;
+			localDataPointer = localDataPointer.children[0];
+				console.log(myLocalData,"localD");
+				
+		    var myjson = JSON.parse(JSON.stringify(myLocalData));
 			root = myjson;
 			
 			update();
-	  })
+		}
+	 
   }
  
 }

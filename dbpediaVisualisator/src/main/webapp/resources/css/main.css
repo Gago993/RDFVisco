@@ -8,6 +8,10 @@
   stroke-width: 1.5px;
 }
 
+.mt-20 {
+	margin-top: 20px;
+}
+
 #licensing {
   fill: green;
 }

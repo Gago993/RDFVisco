@@ -42,7 +42,8 @@ public class HomeController {
 		return m;
 	}
 
-	@RequestMapping(value = "/createJson", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
+	@ResponseBody
 	public String createJson() throws FileNotFoundException {
 
 		Model model = ModelFactory.createDefaultModel();
@@ -55,7 +56,7 @@ public class HomeController {
 
 		JsonModifier jsonModifier = new JsonModifier(result, "http://dbpedia.org/resource/Cristiano_Ronaldo");
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
-		return "first";
+		return modifiedJsonLocation;
 	}
 
 	
