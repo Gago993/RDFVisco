@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,15 +42,18 @@ public class HomeController {
 		return m;
 	}
 
-	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
+	@RequestMapping(value = "/createJson", method = RequestMethod.GET, produces = "application/json")
 	public String createJson() throws FileNotFoundException {
 
 		Model model = ModelFactory.createDefaultModel();
 		RdfGraph graph = new RdfGraph();
 		Model m = graph.getModel("http://dbpedia.org/page/Cristiano_Ronaldo");
-		OutputStream output = new FileOutputStream("C:\\Users\\Alek\\Desktop\\rdfJson.txt");
-		m.write(output, "RDF/JSON");
-		JsonModifier jsonModifier = new JsonModifier("C:\\Users\\Alek\\Desktop\\rdfJson.txt", "http://dbpedia.org/resource/Cristiano_Ronaldo");
+		
+		StringWriter out = new StringWriter();
+		m.write(out, "RDF/JSON");
+		String result = out.toString();
+
+		JsonModifier jsonModifier = new JsonModifier(result, "http://dbpedia.org/resource/Cristiano_Ronaldo");
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return "first";
 	}
