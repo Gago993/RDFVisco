@@ -9,7 +9,7 @@ var w = '100%',
 
 var myjson = {};
 var myLocalData,localDataPointer;
-var url  = "dbpediaVisualisator/createJson";
+var url  = "createJson";
 
 var vis = d3.select("#chart").append("svg")
 .attr("width", w)
@@ -24,7 +24,7 @@ var force = d3.layout.force()
       return d._children ? -d.size / 50 : d.children ? -100 : -30;
     })*/
     .linkDistance(function(d) {
-      return d.target.children ? 150  : 130;
+      return d.target.children ? 50  : 30;
     })
     .charge(function(node) {
        return -500;
@@ -33,12 +33,27 @@ var force = d3.layout.force()
 
 
 var drag = force.drag()
-.on("dragstart", dragstart);
+.on("dragstart", dragstart)
+.on("drag", drag);
 
 function dragstart(d) {
 	  d3.select(this).classed("fixed", d.fixed = true);
+	  
 }
 
+function drag(d){
+	  var children = d.children || d._children;
+	  if(children){
+		  
+		  $.each(children, function(key, val){
+			 if(val.fixed){
+				 console.log(val);
+				 val.y = d.y + 50;
+				 val.py = d.py + 50;
+			 } 
+		  });
+	  }
+}
 
 
 
@@ -155,7 +170,7 @@ function tick(e) {
 	var i = 20;
   force.nodes().forEach(function(d) {
     if (!d.fixed) {
-      var r = circle_radius(d) + 14, dx, dy, ly = 30;
+      var r = circle_radius(d) + 14, dx, dy, ly = 5;
       // #1: constraint all nodes to the visible screen:
       //d.x = Math.min(width - r, Math.max(r, d.x));
       //d.y = Math.min(height - r, Math.max(r, d.y));
@@ -167,12 +182,12 @@ function tick(e) {
         if (d.parent) {
           py = d.parent.y;
         }
-        d.py = d.y = py + d.depth * ly + r;
+        d.py = d.y = py + d.depth + ly + r;
       }
 
       // #1a: constraint all nodes to the visible screen: links
       dx = Math.min(0, width - r - d.x) + Math.max(0, r - d.x);
-      dy = Math.min(0, height - r - d.y) + Math.max(0, r - d.y);
+      dy = Math.min(0, height - r - d.y) + Math.max(0, r - 2*d.y);
       
       if(d.parent && !d.parent.parent){
     	  var num_c = d.parent.children.length || d.parent._children.length;
