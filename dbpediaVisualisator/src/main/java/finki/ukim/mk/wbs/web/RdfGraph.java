@@ -11,9 +11,9 @@ import org.apache.jena.util.FileManager;
 public class RdfGraph {
 	
 	public static Model getModel(String URI){
-		URI = changeURI(URI);
+		String uri = changeURI(URI);
 		FileManager fm = FileManager.get();
-		String uri = changeURI("http://dbpedia.org/resource/Cristiano_Ronaldo");
+		
 		Model m = fm.loadModel(uri);
 		return m;
 	}

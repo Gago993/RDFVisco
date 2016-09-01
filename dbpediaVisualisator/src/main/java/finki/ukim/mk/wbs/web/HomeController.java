@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpRequest;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -44,17 +45,18 @@ public class HomeController {
 
 	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
 	@ResponseBody
-	public String createJson() throws FileNotFoundException {
+	public String createJson(@RequestParam(value = "url") String url) throws FileNotFoundException {
 
+		
 		Model model = ModelFactory.createDefaultModel();
 		RdfGraph graph = new RdfGraph();
-		Model m = graph.getModel("http://dbpedia.org/page/Cristiano_Ronaldo");
+		Model m = graph.getModel(url);
 		
 		StringWriter out = new StringWriter();
 		m.write(out, "RDF/JSON");
 		String result = out.toString();
 
-		JsonModifier jsonModifier = new JsonModifier(result, "http://dbpedia.org/resource/Cristiano_Ronaldo");
+		JsonModifier jsonModifier = new JsonModifier(result, url);
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return modifiedJsonLocation;
 	}

@@ -35,7 +35,7 @@ public class JsonModifier {
 	}
 
 	public String modifyAndGetLocationOfModifiedJson() throws FileNotFoundException {
-		
+
 		JSONParser parser = new JSONParser();
 		try {
 
@@ -53,6 +53,7 @@ public class JsonModifier {
 						System.out.println(key);
 						JSONObject tempObj = new JSONObject();
 						tempObj.put("name", key);
+						tempObj.put("label", getLabelFromUrl(key));
 						JSONArray oldInsideArray = (JSONArray) children.get(key);
 
 						JSONObject oldJobj = (JSONObject) oldInsideArray.get(0);
@@ -62,6 +63,7 @@ public class JsonModifier {
 						objInTemp.put("name", oldJobj.get("value"));
 						objInTemp.put("size", "1000");
 						objInTemp.put("parent", key);
+						objInTemp.put("label", oldJobj.get("value"));
 						tempArray.add(objInTemp);
 						tempObj.put("children", tempArray);
 						resultArray.add(tempObj);
@@ -74,7 +76,6 @@ public class JsonModifier {
 			resultObj.put("name", sparqlParameter);
 			resultObj.put("children", resultArray);
 
-
 			return resultObj.toJSONString();
 
 		} catch (Exception e) {
@@ -82,6 +83,13 @@ public class JsonModifier {
 		}
 
 		return null;
+	}
+
+	private String getLabelFromUrl(String key) {
+		String[] array = key.split("/");
+		if (array.length > 0)
+			return array[array.length - 1];
+		else return key;
 	}
 
 }
