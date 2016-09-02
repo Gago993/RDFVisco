@@ -251,7 +251,7 @@ function click(d) {
     d._children = null;
     update();
   }else{
-	  localDataPointer.children = [{"name": d.parent.name, "label": d.label, children: [{ name: d.name, children: []}]}];
+	  localDataPointer.children = [{"name": d.parent.name, children: [{ name: d.name, children: []}]}];
 	  localDataPointer = localDataPointer.children[0];
 		$.ajax({
 			  dataType: "json",
