@@ -38,7 +38,6 @@ public class JsonModifier {
 
 		JSONParser parser = new JSONParser();
 		try {
-
 			Object obj = parser.parse(json);
 
 			JSONArray resultArray = new JSONArray();
@@ -48,9 +47,9 @@ public class JsonModifier {
 				if (!children.isEmpty()) {
 					Set<?> keys = children.keySet();
 					Iterator<?> it = keys.iterator();
+					int counter = 0;
 					while (it.hasNext()) {
 						String key = (String) it.next();
-						System.out.println(key);
 						JSONObject tempObj = new JSONObject();
 						tempObj.put("name", key);
 						tempObj.put("label", getLabelFromUrl(key));
@@ -67,13 +66,17 @@ public class JsonModifier {
 						tempArray.add(objInTemp);
 						tempObj.put("children", tempArray);
 						resultArray.add(tempObj);
-					}
-
+						counter++;
+						if(counter >=30){
+							break;
+						}
+					}					
 				}
 			}
 
 			JSONObject resultObj = new JSONObject();
 			resultObj.put("name", sparqlParameter);
+			resultObj.put("label", getLabelFromUrl(sparqlParameter));
 			resultObj.put("children", resultArray);
 
 			return resultObj.toJSONString();

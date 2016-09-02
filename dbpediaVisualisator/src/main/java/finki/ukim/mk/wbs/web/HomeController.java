@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,18 +47,16 @@ public class HomeController {
 
 	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
 	@ResponseBody
-	public String createJson(@RequestParam(value = "url") String url) throws FileNotFoundException {
+	public String createJson(@RequestParam(value = "url") String url) throws FileNotFoundException, UnsupportedEncodingException {
 
-		
-		Model model = ModelFactory.createDefaultModel();
+		String decodedUrl = URLDecoder.decode(url, "UTF-8");
 		RdfGraph graph = new RdfGraph();
-		Model m = graph.getModel(url);
-		
+		Model m = graph.getModel(decodedUrl);
 		StringWriter out = new StringWriter();
 		m.write(out, "RDF/JSON");
 		String result = out.toString();
 
-		JsonModifier jsonModifier = new JsonModifier(result, url);
+		JsonModifier jsonModifier = new JsonModifier(result, decodedUrl);
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return modifiedJsonLocation;
 	}

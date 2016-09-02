@@ -64,7 +64,7 @@ function initTree(resourceUri){
 	$.ajax({
 		  dataType: "json",
 		  url: url,
-		  //data: data,
+		  data: {url: resourceUri},
 		  success: success
 		});
 
@@ -72,10 +72,11 @@ function initTree(resourceUri){
 		//"resources/data/barackObama-data.json"
 		//d3.json(data, function(json) {
 			  //root = json;
+		console.log(data);
 		root = data;
 		root.fixed = true;
 		root.px = root.py = 0;
-		myLocalData = { name: root.name, children: []};
+		myLocalData = { name: root.name, label: root.label,  children: []};
 		localDataPointer = myLocalData;
 		update();
 	//		});
@@ -250,12 +251,12 @@ function click(d) {
     d._children = null;
     update();
   }else{
-	  localDataPointer.children = [{"name": d.parent.name, children: [{ name: d.name, children: []}]}];
+	  localDataPointer.children = [{"name": d.parent.name, "label": d.label, children: [{ name: d.name, children: []}]}];
 	  localDataPointer = localDataPointer.children[0];
 		$.ajax({
 			  dataType: "json",
 			  url: url,
-			  data: {name: d.name},
+			  data: {url: d.name},
 			  success: success
 			});
 	
@@ -267,7 +268,7 @@ function click(d) {
 				
 		    var myjson = JSON.parse(JSON.stringify(myLocalData));
 			root = myjson;
-			
+			//root.label = myjson.label;
 			update();
 		}
 	 
