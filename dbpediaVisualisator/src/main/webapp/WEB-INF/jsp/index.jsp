@@ -54,6 +54,12 @@
 					  <input id="results">
 					</div>
                 </div>
+                
+                
+				<div class="col-md-12 mt-50 spinner display-none">
+					<div class="loader"></div>	
+                </div>
+                
                 <div class="col-md-12 mt-20">
    					<div id="chart"></div>
             	</div>
@@ -61,13 +67,6 @@
             
         </div>
     </section>
-
-	
-
-	
-
-
-
 
 
 	<script src="resources/js/rdfVisco/search.js"></script>

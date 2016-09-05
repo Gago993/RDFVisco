@@ -59,7 +59,7 @@ function drag(d){
 
 function initTree(resourceUri){
 
-	//TODO:Ajax call to get json for initial resource uri from search.
+	hideTree();
 	
 	$.ajax({
 		  dataType: "json",
@@ -72,6 +72,7 @@ function initTree(resourceUri){
 		//"resources/data/barackObama-data.json"
 		//d3.json(data, function(json) {
 			  //root = json;
+		hideSpinner();
 		console.log(data);
 		root = data;
 		root.fixed = true;
@@ -79,10 +80,9 @@ function initTree(resourceUri){
 		myLocalData = { name: root.name, label: root.label,  children: []};
 		localDataPointer = myLocalData;
 		update();
-	//		});
+		showTree();
 	}
 }
-initTree();
 
 
 function update(nodes) {
@@ -102,7 +102,7 @@ function update(nodes) {
   // make sure we set .px/.py as well as node.fixed will use those .px/.py to 'stick' the node to:
   if (!root.px) {
     // root have not be set / dragged / moved: set initial root position
-    root.px = root.x = width / 3;
+    root.px = root.x = width / 2;
     root.py = root.y = circle_radius(root) + 2 ;
   }
 
@@ -171,7 +171,7 @@ function tick(e) {
 	var i = 20;
   force.nodes().forEach(function(d) {
     if (!d.fixed) {
-      var r = circle_radius(d) + 14, dx, dy, ly = 5;
+      var r = circle_radius(d) + 14, dx, dy, ly = 10;
       // #1: constraint all nodes to the visible screen:
       //d.x = Math.min(width - r, Math.max(r, d.x));
       //d.y = Math.min(height - r, Math.max(r, d.y));
@@ -200,6 +200,21 @@ function tick(e) {
     	  }
       }
       
+      if(d.parent){
+    	  var parentChilds = d.parent.children.length || d.parent._children.length;
+    	  var parentParentChilds = 0;
+    	  
+    	  if(d.parent.parent){
+    		  if(d.parent.parent.children || d.parent.parent._children){
+    			  parentParentChilds = d.parent.parent.children.length || d.parent.parent._children.length;
+    		  }
+    	  }
+          
+    	  if((parentParentChilds == 0 || parentParentChilds == 1) && parentChilds == 1){
+        	  d.px = width/2;
+          }
+      }
+      
       
       d.y += 2 * Math.max(-ly, Math.min(ly, dy));
       // #1b: constraint all nodes to the visible screen: charges ('repulse')
@@ -225,7 +240,7 @@ function tick(e) {
   node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
   
-  text.attr("x", function(d) { return d.x; })
+  text.attr("x", function(d) { return d.x - 10; })
   .attr("y", function(d) { return d.y; });
 }
 
@@ -253,7 +268,16 @@ function click(d) {
   }else{
 	  localDataPointer.children = [{"name": d.parent.name, "label": d.parent.label, children: [{ name: d.name, children: []}]}];
 	  localDataPointer = localDataPointer.children[0];
-		$.ajax({
+		
+	  if(!testDbpediaLink(d.name)){
+		  alert("You have selected literal, please choose another option.");
+		  return;
+	  }
+	  
+	  hideTree();
+	  showSpinner();
+	  
+	  $.ajax({
 			  dataType: "json",
 			  url: url,
 			  data: {url: d.name},
@@ -262,6 +286,7 @@ function click(d) {
 	
 		function success(data){
 			//myjson = JSON.parse(JSON.stringify(myLocalData));
+			
 			localDataPointer.children[0] = data;
 			localDataPointer = localDataPointer.children[0];
 				console.log(myLocalData,"localD");
@@ -270,6 +295,8 @@ function click(d) {
 			root = myjson;
 			//root.label = myjson.label;
 			update();
+			hideSpinner();
+			showTree();
 		}
 	 
   }
@@ -323,3 +350,21 @@ function flatten(root) {
 
   return nodes;
 }
+
+function hideTree(){
+	$('#chart').addClass('display-none');
+}
+
+function showTree(){
+	$('#chart').removeClass('display-none');
+}
+
+function testDbpediaLink(link){
+	var re = new RegExp("http:\/\/dbpedia.org\/resource\/");
+	if (re.test(link)) {
+	    return true;
+	} else {
+	    return false;
+	}
+}
+
