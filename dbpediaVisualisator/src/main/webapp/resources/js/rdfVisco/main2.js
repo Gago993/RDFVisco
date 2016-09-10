@@ -266,13 +266,14 @@ function click(d) {
     d._children = null;
     update();
   }else{
+	  if(!testDbpediaLink(d.name)){
+		  alert("You have selected literal, please choose another option.");//show modal here
+		  return;
+	  }
 	  localDataPointer.children = [{"name": d.parent.name, "label": d.parent.label, children: [{ name: d.name, children: []}]}];
 	  localDataPointer = localDataPointer.children[0];
 		
-	  if(!testDbpediaLink(d.name)){
-		  alert("You have selected literal, please choose another option.");
-		  return;
-	  }
+	  
 	  
 	  hideTree();
 	  showSpinner();

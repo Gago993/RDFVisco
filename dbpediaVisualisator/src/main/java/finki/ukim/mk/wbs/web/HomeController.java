@@ -47,7 +47,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/createJson", method = RequestMethod.GET)
 	@ResponseBody
-	public String createJson(@RequestParam(value = "url") String url) throws FileNotFoundException, UnsupportedEncodingException {
+	public String createJson(@RequestParam(value = "url") String url, @RequestParam(value = "page")int page) throws FileNotFoundException, UnsupportedEncodingException {
 
 		String decodedUrl = URLDecoder.decode(url, "UTF-8");
 		RdfGraph graph = new RdfGraph();
@@ -56,7 +56,7 @@ public class HomeController {
 		m.write(out, "RDF/JSON");
 		String result = out.toString();
 
-		JsonModifier jsonModifier = new JsonModifier(result, decodedUrl);
+		JsonModifier jsonModifier = new JsonModifier(result, decodedUrl,page);
 		String modifiedJsonLocation = jsonModifier.modifyAndGetLocationOfModifiedJson();
 		return modifiedJsonLocation;
 	}

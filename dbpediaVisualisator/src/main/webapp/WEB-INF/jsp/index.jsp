@@ -63,6 +63,8 @@
                 <div class="col-md-12 mt-20">
    					<div id="chart"></div>
             	</div>
+            	
+            	
             </div>
             
         </div>

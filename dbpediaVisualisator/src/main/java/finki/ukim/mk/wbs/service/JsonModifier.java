@@ -20,10 +20,12 @@ public class JsonModifier {
 
 	private String json;
 	private String sparqlParameter;
+	private int page;
 
-	public JsonModifier(String json, String sparqlParameter) {
+	public JsonModifier(String json, String sparqlParameter,int page) {
 		this.json = json;
 		this.sparqlParameter = sparqlParameter;
+		this.page=page;
 	}
 
 	public String getJson() {
@@ -49,6 +51,8 @@ public class JsonModifier {
 					Iterator<?> it = keys.iterator();
 					int counter = 0;
 					while (it.hasNext()) {
+						counter++;
+						if(counter>((page-1)*20)&& counter<page*20){
 						String key = (String) it.next();
 						JSONObject tempObj = new JSONObject();
 						tempObj.put("name", key);
@@ -66,8 +70,7 @@ public class JsonModifier {
 						tempArray.add(objInTemp);
 						tempObj.put("children", tempArray);
 						resultArray.add(tempObj);
-						counter++;
-						if(counter >=30){
+						}else if(counter>(page*20)){
 							break;
 						}
 					}					
