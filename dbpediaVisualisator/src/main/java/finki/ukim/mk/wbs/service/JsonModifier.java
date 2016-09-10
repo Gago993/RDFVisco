@@ -44,14 +44,18 @@ public class JsonModifier {
 
 			JSONArray resultArray = new JSONArray();
 			JSONObject jsonObject = (JSONObject) obj;
+			int allObjects=0;
 			if (!jsonObject.isEmpty()) {
 				JSONObject children = (JSONObject) jsonObject.get(sparqlParameter);
 				if (!children.isEmpty()) {
 					Set<?> keys = children.keySet();
 					Iterator<?> it = keys.iterator();
 					int counter = 0;
+					
+					boolean firstTime=true;
 					while (it.hasNext()) {
 						counter++;
+						allObjects++;
 						if(counter>((page-1)*20)&& counter<page*20){
 						String key = (String) it.next();
 						JSONObject tempObj = new JSONObject();
@@ -81,6 +85,8 @@ public class JsonModifier {
 			resultObj.put("name", sparqlParameter);
 			resultObj.put("label", getLabelFromUrl(sparqlParameter));
 			resultObj.put("children", resultArray);
+			resultObj.put("page", page);
+			resultObj.put("all",allObjects );
 
 			return resultObj.toJSONString();
 
