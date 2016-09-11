@@ -21,6 +21,7 @@ public class JsonModifier {
 	private String json;
 	private String sparqlParameter;
 	private int page;
+	public static int PageSize = 20;
 
 	public JsonModifier(String json, String sparqlParameter,int page) {
 		this.json = json;
@@ -51,13 +52,19 @@ public class JsonModifier {
 					Set<?> keys = children.keySet();
 					Iterator<?> it = keys.iterator();
 					int counter = 0;
-					
+					allObjects = children.size();
 					boolean firstTime=true;
 					while (it.hasNext()) {
-						counter++;
-						allObjects++;
-						if(counter>((page-1)*20)&& counter<page*20){
+						
 						String key = (String) it.next();
+
+						if(counter < (page * PageSize)){
+							counter++;
+							continue;
+						}else if(counter >= ((page + 1) * PageSize)){
+							break;
+						}
+						
 						JSONObject tempObj = new JSONObject();
 						tempObj.put("name", key);
 						tempObj.put("label", getLabelFromUrl(key));
@@ -74,9 +81,8 @@ public class JsonModifier {
 						tempArray.add(objInTemp);
 						tempObj.put("children", tempArray);
 						resultArray.add(tempObj);
-						}else if(counter>(page*20)){
-							break;
-						}
+						
+						counter++;
 					}					
 				}
 			}

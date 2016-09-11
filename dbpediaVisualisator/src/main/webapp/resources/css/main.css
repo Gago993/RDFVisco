@@ -108,6 +108,25 @@ text {
 	margin-top: 200px;
 }
 
+
+.search-bar {
+	display: inline;
+	padding-left: 20%;
+	padding-right: 20%;
+}
+
+.f-left {
+	float: left;
+}
+
+.f-right {
+	float: right;
+}
+
+.autocomplete {
+	margin-left: 30%;
+}
+
 /*** LOADER ***/
 .loader {
   border: 16px solid #f3f3f3;
@@ -133,5 +152,6 @@ text {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 
 

@@ -10,6 +10,13 @@ var w = '100%',
 var myjson = {};
 var myLocalData,localDataPointer;
 var url  = "createJson";
+var page = 0;
+
+var currentCounter = $("#currentCount");
+var allCounter = $("#allCount");
+var nextPage = $("#nextPage");
+var previousPage = $("#previousPage");
+
 
 var vis = d3.select("#chart").append("svg")
 .attr("width", w)
@@ -47,7 +54,6 @@ function drag(d){
 		  
 		  $.each(children, function(key, val){
 			 if(val.fixed){
-				 console.log(val);
 				 val.y = d.y + 50;
 				 val.py = d.py + 50;
 			 } 
@@ -60,11 +66,11 @@ function drag(d){
 function initTree(resourceUri){
 
 	hideTree();
-	
+	page = 0;
 	$.ajax({
 		  dataType: "json",
 		  url: url,
-		  data: {url: resourceUri},
+		  data: {url: resourceUri, page: page},
 		  success: success
 		});
 
@@ -80,7 +86,9 @@ function initTree(resourceUri){
 		myLocalData = { name: root.name, label: root.label,  children: []};
 		localDataPointer = myLocalData;
 		update();
+		setCounters(data.page + 1,data.all);
 		showTree();
+		
 	}
 }
 
@@ -277,17 +285,16 @@ function click(d) {
 	  
 	  hideTree();
 	  showSpinner();
-	  
+	  page = 0;
 	  $.ajax({
 			  dataType: "json",
 			  url: url,
-			  data: {url: d.name},
+			  data: {url: d.name, page: page},
 			  success: success
 			});
 	
 		function success(data){
 			//myjson = JSON.parse(JSON.stringify(myLocalData));
-			
 			localDataPointer.children[0] = data;
 			localDataPointer = localDataPointer.children[0];
 				console.log(myLocalData,"localD");
@@ -296,6 +303,7 @@ function click(d) {
 			root = myjson;
 			//root.label = myjson.label;
 			update();
+			setCounters(data.page + 1,data.all);
 			hideSpinner();
 			showTree();
 		}
@@ -358,6 +366,65 @@ function hideTree(){
 
 function showTree(){
 	$('#chart').removeClass('display-none');
+}
+
+function setCounters(page, all){
+	var current = page*20 > all ? all : page*20;
+	currentCounter.html(current);
+	allCounter.html(all);
+}
+
+nextPage.click(function(){
+	page++;
+	getPage(page);
+});
+
+previousPage.click(function(){
+	page--;
+	if(page < 0){ page = 0};
+	getPage(page);
+});
+
+
+function getPage(p) {
+	
+	hideTree();
+	showSpinner();
+	
+	$.ajax({
+		dataType : "json",
+		url : url,
+		data : {
+			url : localDataPointer.name,
+			page : p
+		},
+		success : success
+	});
+
+	function success(data) {
+		setPage(data.all);
+		if(data.page * 20 <= data.all){
+			localDataPointer.children = data.children;
+			setCounters(data.page + 1, data.all);
+		}
+
+		var myjson = JSON.parse(JSON.stringify(myLocalData));
+		root = myjson;
+		// root.label = myjson.label;
+		update();
+		
+		hideSpinner();
+		showTree();
+	}
+}
+
+function setPage(all){
+	if(page*20 > all){
+		page = Math.floor(all/20);
+	}
+	else if(page*20 < 0){
+		page = 0;
+	}
 }
 
 function testDbpediaLink(link){

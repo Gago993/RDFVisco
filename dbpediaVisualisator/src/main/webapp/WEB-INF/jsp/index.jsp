@@ -48,11 +48,25 @@
         <div>
         <hr class="star-light">
             <div class="row">
-                <div class="col-md-12  text-center">
-                    <div class="autocomplete">
+                <div class="col-md-12  text-center search-bar">
+                	<a id="previousPage" class="page-link f-left" href="#" aria-label="Previous">
+			        	<span aria-hidden="true">&laquo;</span>
+			        	<span>Previous</span>
+			      	</a>
+                    <div class="autocomplete f-left">
 					  <label for="results">Search <span class="glyphicon glyphicon-search"></span> </label>
 					  <input id="results">
 					</div>
+					
+					<label>
+						<span id="currentCount">0</span>/<span id="allCount">0</span>
+					</label>
+										
+					<a id="nextPage" class="page-link f-right" href="#" aria-label="Next">
+			        	<span>Next</span>
+			        	<span aria-hidden="true">&raquo;</span>
+			      	</a>
+					
                 </div>
                 
                 
